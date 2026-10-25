@@ -1,0 +1,54 @@
+name: Plugin installation
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --global @openai/codex
+      - name: Install the marketplace and check the bundled skills
+        shell: python
+        run: |
+          import json
+          import os
+          from pathlib import Path
+          import subprocess
+          import tempfile
+
+          root = Path.cwd()
+          with tempfile.TemporaryDirectory(prefix="pstack-install-") as home:
+              env = dict(os.environ, CODEX_HOME=home)
+
+              def codex(*args):
+                  result = subprocess.run(
+                      ["codex", "plugin", *args, "--json"],
+                      env=env, check=True, capture_output=True, text=True,
+                      timeout=60,
+                  )
+                  return json.loads(result.stdout)
+
+              codex("marketplace", "add", str(root))
+              plugin = codex("add", "pstack@codex-pstack")
+              installed = Path(plugin["installedPath"])
+              manifest = json.loads((installed / ".codex-plugin/plugin.json").read_text())
+              skill_root = installed / manifest["skills"]
+              skills = {p.parent.name for p in skill_root.glob("*/SKILL.md")}
+              required = {"poteto-mode", "setup-pstack", "deslop", "control-cli", "control-ui"}
+              assert required <= skills, f"Missing skills: {required - skills}"
+              for source in (root / ".agents").rglob("*"):
+                  if source.is_file():
+                      target = installed / source.relative_to(root)
+                      assert target.read_bytes() == source.read_bytes(), f"Missing or changed: {target}"
+              print(f"Installed {plugin['pluginId']} with {len(skills)} skills")
