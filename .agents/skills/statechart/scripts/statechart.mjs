@@ -24,6 +24,7 @@ import { cannotRunTlc, findTlc } from "./tlc-tools.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const { MAX_STRING_LENGTH } = constants;
+const tempDir = (prefix) => fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), prefix)));
 
 class CannotFinish extends Error {}
 class TlcStopped extends CannotFinish {}
@@ -182,7 +183,7 @@ function runJava(file, args, options, dot) {
 
 async function tlc(tools, spec, cfg, base, { dump, module, workers = "1" } = {}) {
   fs.writeFileSync(`${base}.cfg`, cfg);
-  const metadir = fs.mkdtempSync(path.join(os.tmpdir(), "tlc-"));
+  const metadir = tempDir("tlc-");
   // TLC writes the standard modules, such as Naturals.tla, to java.io.tmpdir under fixed names,
   // so runs that share that folder can read a module while another run rewrites it.
   const javaTmp = path.join(metadir, "tmp");
@@ -608,7 +609,7 @@ function outDir(flagged, input, name) {
 }
 
 async function inWorkFolder(body) {
-  const work = fs.mkdtempSync(path.join(os.tmpdir(), "statechart-"));
+  const work = tempDir("statechart-");
   fs.mkdirSync(path.join(work, "tlc"));
   let keep = false;
   try {

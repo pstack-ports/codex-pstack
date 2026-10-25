@@ -10,6 +10,14 @@ Create project skills only at `.agents/skills/<name>/SKILL.md` and personal skil
 
 Read bundled guides locally. An upstream URL ending in `pstack/skills/<path>` refers to `<plugin-root>/.agents/skills/<path>`; other bundled upstream paths resolve from the plugin root. Do not fetch a file already shipped locally. The role files in `agents/` are prompt briefs, not registered Codex agent types.
 
+Apply the same mapping to shell commands and generated plans. Replace `pstack/skills/<path>` with the installed absolute path. A `git show <ref>:pstack/skills/<path>` instruction, or a request to re-read a bundled playbook from trunk, means read the installed plugin file; it does not mean that pstack exists in the target repository's Git tree. Record the plugin root and manifest version at program start, reuse those resources for the run, and give delegates absolute paths. Invoke bundled `scripts/<path>` through the owning skill's absolute directory while keeping the working directory in the target repository or worktree. Read the target repository's own files from its resolved base ref when the playbook requires trunk evidence.
+
+## Durable state and recovery
+
+Where upstream says the agent's store, use `${CODEX_HOME:-~/.codex}/pstack/<workspace-key>/`. Derive a stable workspace key from the primary Git worktree's directory name plus the first 12 hex characters of the SHA-256 of its canonical absolute path encoded as UTF-8, so linked worktrees share state and unrelated repositories do not collide. Outside Git, use the canonical workspace path. Record the resolved absolute directory in the plan and every delegate brief. Plans go under its `docs/`; orchestration uses `orchestrate/<project-slug>/`. Pass that orchestration directory as `--store <absolute-path>` or `ORCH_STORE` on every `orch` call. Keep this state outside the plugin cache and the target repository.
+
+Replace Cursor dashboard checks with the native read-only agent status/list operation when available, plus the ledger, worktrees, and forge evidence. Never resume an idle worker just to probe it. A local worktree persists files, not a running worker. After a host restart, inspect saved agent IDs through the supported host tools; reattach only when the host confirms the worker still exists. Otherwise recover the saved brief, branch, head SHA, and receipts and spawn a replacement. Do not assume cloud workers survived or promise unattended execution without a documented runner. Respect the session's concurrency and nesting limits instead of upstream fleet sizes.
+
 ## Tools and delegation
 
 Use only tools and arguments actually exposed in the session. The names below describe the operation; choose the matching native tool, including namespaced variants.
@@ -21,7 +29,7 @@ Use only tools and arguments actually exposed in the session. The names below de
 | `readonly: true` | Tell the worker to inspect only and never edit. Use a supported read-only agent if available; otherwise review workspace status afterward. This is a brief constraint, not an invented sandbox field. |
 | `run_in_background: true` | Native spawns already return while the agent works. |
 | `resume`, messages, follow-up | Use the session's send/resume/follow-up operation with the returned agent ID. Preserve the upstream preference for a fresh worker unless state is costly to transfer. |
-| `environment: "cloud"`, `cloud_base_branch` | Create an isolated Git worktree at the named branch/commit and give its absolute path to the worker. Native agents otherwise share the workspace. Do not claim remote isolation. |
+| `environment: "cloud"`, `cloud_base_branch` | Create an isolated Git worktree at the named branch/commit and give its absolute path to the worker. Assign separate app ports and runtime state when needed; worktrees share the host machine. Native agents otherwise share the workspace. Do not claim remote isolation. |
 | `file_attachments` | Put the absolute file paths in the brief. |
 | Wait for workers | Use the native agent wait operation, then collect actual reports and inspect diffs. Respect the exposed concurrency limit and release finished workers when supported. |
 | `AskQuestion` | Use the available user-input tool in a mode that supports it. Otherwise ask one concise question in text; required approval must receive a real answer. |
