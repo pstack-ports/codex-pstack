@@ -18,18 +18,16 @@ fork it. improve it. make it yours. PRs are welcome!
 
 ## install
 
-To use pstack in this checkout, open it in a new Codex session. Codex discovers all 61 project skills in `.agents/skills/`. In this package they appear as `pstack:<name>`, such as `$pstack:poteto-mode`; use the exact name in your skill picker. Loose skills copied without the plugin manifest use their unprefixed names.
-
-For use from another project, install this source through its repository marketplace so that skills, role briefs, and guides stay together. You can add the source by its absolute directory path instead of `.` in the command below.
-
-This source also ships `.codex-plugin/plugin.json`, with `skills` set to `./.agents/skills/`, and a repository marketplace at `.agents/plugins/marketplace.json`. To install the plugin through the installed Codex CLI, run:
+Install pstack from GitHub through the Codex CLI. Run these commands from any directory; you don't need to clone this repository:
 
 ```bash
-codex plugin marketplace add .
+codex plugin marketplace add pstack-ports/codex-pstack
 codex plugin add pstack@codex-pstack
 ```
 
-Use the plugin directory in the desktop app if your client requires its installation flow. No account upload, service connection, or global installation is required to use the project skills.
+Start a new Codex session in the project where you want to use pstack. The installed skills appear as `pstack:<name>`, such as `$pstack:poteto-mode`; use the exact name in your skill picker.
+
+Use the plugin directory in the desktop app if your client requires its installation flow. See the [official marketplace documentation](https://developers.openai.com/plugins/build/plugins#add-a-marketplace-from-the-cli) for supported sources.
 
 The core skills need Codex file/shell tools. Parallel workflows use the session's native subagent tools when available. Runtime helpers require Bun; forge workflows need the relevant integration or authenticated `gh`. UI, Slack, issue-tracker, and event-driven workflows discover their external prerequisites before acting.
 
