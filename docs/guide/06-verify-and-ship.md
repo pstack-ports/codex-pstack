@@ -1,8 +1,5 @@
 # Verify the result and open a PR
 
-> Codex port: use `$skill-name` to invoke skills. The [Codex adapter](../harness/codex.md) translates the upstream tool names, model defaults, history, and automation instructions below. Follow the [README](../../README.md) for installation; upstream UI gestures and external service availability depend on the host.
-
-
 "It compiles" is not evidence. The [Prove It Works principle](../../.agents/skills/principle-prove-it-works/SKILL.md) makes the agent check the real artifact before it reports success, and your job is to make "the real artifact" checkable. This page covers stating a finish condition, vetting a measured number, generating a verification skill for your app, formally verifying a property tests rarely reach, opening the PR, and driving it to merged.
 
 Verification is the slowest step in most agent work, because it's the step that usually waits on a human. Make the agent able to do it, and you stop being the bottleneck. Skip it, and running more agents only gets you more unchecked work to review.

@@ -1,8 +1,5 @@
 # Build the change and clean the diff
 
-> Codex port: use `$skill-name` to invoke skills. The [Codex adapter](../harness/codex.md) translates the upstream tool names, model defaults, history, and automation instructions below. Follow the [README](../../README.md) for installation; upstream UI gestures and external service availability depend on the host.
-
-
 The build playbooks share one discipline. Say what you observed, and let the playbook demand the evidence. This page shows what to put in the prompt for each common build task, then the cleanup habit that keeps diffs reviewable.
 
 ## Prompt each build playbook with what you know

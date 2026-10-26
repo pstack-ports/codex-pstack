@@ -1,8 +1,5 @@
 # Understand the code before changing it
 
-> Codex port: use `$skill-name` to invoke skills. The [Codex adapter](../harness/codex.md) translates the upstream tool names, model defaults, history, and automation instructions below. Follow the [README](../../README.md) for installation; upstream UI gestures and external service availability depend on the host.
-
-
 Editing code you don't understand is how subtle regressions ship, and that's as true for the agent as for you. Agents usually fail in one of two ways. They misread what you want, or they don't have the context to do the work right. [What goes in a prompt](./02-poteto-mode.md#what-goes-in-a-prompt) handles the first. This page handles the second.
 
 pstack gives you four ways in. `/how` explains what the code does now. `/why` digs up the reasons it's shaped that way. `/teach` blends both into one explanation. `/recall` rebuilds your own recent context on a topic. Each one also makes the agent explain itself in words you can check. That's how you supervise an agent that may know the code better than you do.
