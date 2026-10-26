@@ -32,14 +32,14 @@ Tests alone are not sufficient verification. A PR is verified only when its unit
 ### Arm the program
 
 - [ ] State the protocol and this plan to the operator, then stop. Start execution only on the operator's explicit go.
-- [ ] Workflow sources. Record the installed plugin root and version and read these absolute paths at program start and every audit. Read project-owned resources from the repository's resolved base ref when trunk evidence is required.
-  - [ ] `<installed poteto-mode directory>/playbooks/<execution playbook>.md`
-  - [ ] `<installed swarm directory>/SKILL.md`
-  - [ ] `<resolved control skill path>`
-  - [ ] `<installed poteto-mode directory>/playbooks/opening-a-pr.md`
-  - [ ] `<absolute path of each other leaf skill the program uses>`
-- [ ] Audit cadence. On the operator's go, audit hourly through an explicitly requested, supported continuation or scheduling facility. Record the actual mechanism. If none is available, record active-session-only execution and the resume command; do not promise unattended ticks.
-- [ ] Use this tick prompt, verbatim. "Re-read the execution playbook from its recorded installed path. Audit the operation against it and fix drift in this tick. Probe every active lane and judge progress by side effects only. Stand down a stuck lane and dispatch its replacement now. Then post a short status message to the operator in chat only when the audit found a tracked change that no earlier status message reported, such as a PR opened, a code-ready head, a round launched or closed, a verdict, a merge, a stuck agent and the action taken, a blocker added or cleared, or a decision only the operator can make. Name every such change and nothing else. Do not repeat a table, the merged list, or an unchanged blocker. If the audit found none, end the turn with no reply text. Either way, log this tick's row in your decision trail. The row names the items reported, or none."
+- [ ] Read these from trunk at program start. Re-read them at every tick.
+  - [ ] `git show origin/main:pstack/skills/poteto-mode/playbooks/<execution playbook>.md`
+  - [ ] `git show origin/main:pstack/skills/swarm/SKILL.md`
+  - [ ] `git show origin/main:<control skill path>`
+  - [ ] `git show origin/main:pstack/skills/poteto-mode/playbooks/opening-a-pr.md`
+  - [ ] `git show origin/main:pstack/skills/<each other leaf skill the program uses>`
+- [ ] On the operator's go, arm the audit tick as `/loop 1h` with the tick prompt below. Never leave the cadence to memory.
+- [ ] Use this tick prompt, verbatim. "Re-read the execution playbook from trunk. Audit the operation against it and fix drift in this tick. Probe every active lane and judge progress by side effects only. Stand down a stuck lane and dispatch its replacement now. Then post a short status message to the operator in chat only when the audit found a tracked change that no earlier status message reported, such as a PR opened, a code-ready head, a round launched or closed, a verdict, a merge, a stuck agent and the action taken, a blocker added or cleared, or a decision only the operator can make. Name every such change and nothing else. Do not repeat a table, the merged list, or an unchanged blocker. If the audit found none, end the turn with no reply text. Either way, log this tick's row in your decision trail. The row names the items reported, or none."
 - [ ] On the operator's hold or stand-down, send every owner a zero-writes order at once.
 
 ### Spawn owners

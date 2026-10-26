@@ -20,9 +20,7 @@ ${rule}
 ### PR mechanics
 ### Verdict and merge
 ### Boot recipe
-Workflow sources. Read the installed plugin paths recorded in this plan.
-Audit cadence. Audit hourly during an explicitly requested Codex continuation, or record active-session-only execution.
-Post a status message when tracked state changes.
+\`git show origin/main:\` /loop 1h status message
 
 ## PR 1
 **Depends on.** None.
@@ -52,10 +50,10 @@ Close.
 Recorded.
 `;
 
-const runPlan = (example: string, expectedExit: number, plan = validPlan) => {
+const runPlan = (example: string, expectedExit: number) => {
 	const directory = mkdtempSync(join(tmpdir(), "check-plan-test-"));
 	const file = join(directory, "plan.md");
-	writeFileSync(file, plan + example);
+	writeFileSync(file, validPlan + example);
 	try {
 		const result = spawnSync("node", [checker, file], { encoding: "utf8" });
 		expect(result.status).toBe(expectedExit);
@@ -64,19 +62,6 @@ const runPlan = (example: string, expectedExit: number, plan = validPlan) => {
 		rmSync(directory, { recursive: true, force: true });
 	}
 };
-
-test("accepts Codex workflow sources and cadence without Cursor commands", () => {
-	expect(validPlan).not.toContain("/loop");
-	expect(validPlan).not.toContain("git show origin/main:");
-	runPlan("", 0);
-});
-
-test("requires workflow sources and an audit cadence", () => {
-	for (const marker of ["Workflow sources.", "Audit cadence."]) {
-		const result = runPlan("", 1, validPlan.replace(marker, "Omitted."));
-		expect(result.stderr).toContain(`Program checklist lacks "${marker}"`);
-	}
-});
 
 test("accepts ordinary, indented, and longer closing fences", () => {
 	for (const indent of ["", " ", "  ", "   "])
