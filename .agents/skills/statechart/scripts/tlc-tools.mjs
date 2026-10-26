@@ -21,7 +21,7 @@ export function findTlc() {
   if (TLA2TOOLS) return { jar: TLA2TOOLS, java: JAVA || "java" };
   const command = (tools) =>
     `cd "$(mktemp -d)" && MISE_CEILING_PATHS="$PWD" mise install ${tools.map((t) => `'${t}'`).join(" ")}`;
-  const empty = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), "statechart-mise-")));
+  const empty = fs.mkdtempSync(path.join(os.tmpdir(), "statechart-mise-"));
   const env = { ...process.env, MISE_CEILING_PATHS: empty };
   const run = (...args) => spawnSync("mise", args, { cwd: empty, env, encoding: "utf8" });
   const mise = (...args) => {
