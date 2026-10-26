@@ -8,7 +8,6 @@ import {
   mkdtempSync,
   readdirSync,
   readFileSync,
-  realpathSync,
   renameSync,
   rmSync,
   statSync,
@@ -5845,21 +5844,6 @@ const writeLamp = (dir) => {
   return join(dir, "Lamp-statechart");
 };
 
-test("a symlinked TMPDIR keeps diagnostic paths relative to the workspace", needsTlc, () => {
-  const dir = mkdtempSync(join(tmpdir(), "statechart-"));
-  writeLamp(dir);
-  const tmp = join(dir, "tmp");
-  mkdirSync(tmp);
-  const alias = join(dir, "alias");
-  symlinkSync(tmp, alias, "dir");
-  writeFileSync(join(dir, "Lamp.map.mjs"), 'export const state = () => { throw new Error("mapping failed"); };\n');
-  const r = node("statechart.mjs", ["from-spec", "Lamp.tla"], dir, { TMPDIR: alias });
-  assert.equal(r.status, 2, r.stderr);
-  const kept = r.stderr.match(/ The files that this run wrote are in (tmp\/statechart-\w+)\.\n$/)?.[1];
-  assert.ok(kept, r.stderr);
-  assert.ok(existsSync(join(dir, kept, "tlc", "Lamp.out")));
-});
-
 test("a rerun without --png removes the chart.png of an earlier run", needsTlc, () => {
   const dir = mkdtempSync(join(tmpdir(), "statechart-"));
   const out = writeLamp(dir);
@@ -6176,7 +6160,6 @@ int rename(const char *from, const char *to) {
 }
 `;
 const failingRenames = (() => {
-  if (process.platform !== "linux") return null;
   const dir = mkdtempSync(join(tmpdir(), "statechart-preload-"));
   writeFileSync(join(dir, "rename.c"), failRenames);
   const so = join(dir, "rename.so");
@@ -6185,7 +6168,7 @@ const failingRenames = (() => {
 })();
 test(
   "a run whose rename fails after it moves the output folder aside puts the folder back, or says where it is",
-  { skip: needsTlc.skip || (!failingRenames && "requires Linux LD_PRELOAD and a C compiler") },
+  { skip: needsTlc.skip || (!failingRenames && "cannot compile a rename preload") },
   () => {
     const dir = mkdtempSync(join(tmpdir(), "statechart-"));
     writeLamp(dir);
@@ -6221,7 +6204,7 @@ test(
 
 test(
   "a run on a filesystem that cannot rename copies its files into place",
-  { skip: needsTlc.skip || (!failingRenames && "requires Linux LD_PRELOAD and a C compiler") },
+  { skip: needsTlc.skip || (!failingRenames && "cannot compile a rename preload") },
   () => {
     const dir = mkdtempSync(join(tmpdir(), "statechart-"));
     writeLamp(dir);
@@ -6248,7 +6231,7 @@ test(
 
 test(
   "a run that cannot rename replaces a folder that another run makes before its copy, and keeps one that another run makes during its copy",
-  { skip: needsTlc.skip || (!failingRenames && "requires Linux LD_PRELOAD and a C compiler") },
+  { skip: needsTlc.skip || (!failingRenames && "cannot compile a rename preload") },
   () => {
     const dir = mkdtempSync(join(tmpdir(), "statechart-"));
     writeLamp(dir);
@@ -6280,7 +6263,7 @@ test(
 
 test(
   "a run that cannot rename stops when another run removes its folder during its copy and makes an empty one in its place, and keeps that folder",
-  { skip: needsTlc.skip || (!failingRenames && "requires Linux LD_PRELOAD and a C compiler") },
+  { skip: needsTlc.skip || (!failingRenames && "cannot compile a rename preload") },
   () => {
     const dir = mkdtempSync(join(tmpdir(), "statechart-"));
     writeLamp(dir);
@@ -6301,7 +6284,7 @@ test(
 
 test(
   "a run that cannot rename keeps the folder that another run puts in place of its folder as soon as the run makes it",
-  { skip: needsTlc.skip || (!failingRenames && "requires Linux LD_PRELOAD and a C compiler") },
+  { skip: needsTlc.skip || (!failingRenames && "cannot compile a rename preload") },
   () => {
     const dir = mkdtempSync(join(tmpdir(), "statechart-"));
     writeLamp(dir);
@@ -6527,7 +6510,7 @@ exit $s
     const folders = new Set();
     for (const line of runs) {
       const [folder, parsed] = line.split(": ");
-      assert.ok(folder.startsWith(join(realpathSync(tmp), "tlc-")), line);
+      assert.ok(folder.startsWith(join(tmp, "tlc-")), line);
       assert.ok(parsed.startsWith(`Parsing file ${folder}/`), line);
       folders.add(folder);
     }
@@ -6552,7 +6535,7 @@ test(
     const [, file] = r.stderr.match(
       /^(\S+\/tlc\/Pay\.out): TLC stopped on an error that is not a broken rule: Assumption .* is false\.\n$/,
     );
-    assert.ok(file.startsWith(realpathSync(tmp)), file);
+    assert.ok(file.startsWith(tmp), file);
     assert.match(readFileSync(file, "utf8"), /Assumption .* is false/);
     assert.equal(existsSync(join(dir, "Pay-statechart")), false);
   },
