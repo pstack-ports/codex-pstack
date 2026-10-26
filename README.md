@@ -1,6 +1,6 @@
 # pstack for Codex
 
-Codex port of [pstack](https://github.com/cursor/plugins/tree/99b609a72323b70204eab407c622f436e858e112/pstack) `0.15.32` by Lauren Tan, following [agy-pstack](https://github.com/pstack-ports/agy-pstack). Bundles `deslop`, `control-cli`, and `control-ui` from cursor-team-kit. See [UPSTREAM.md](./UPSTREAM.md) for the source pin and port scope.
+Codex port of [pstack](https://github.com/cursor/plugins/tree/99b609a72323b70204eab407c622f436e858e112/pstack) `0.15.32` by Lauren Tan, following [agy-pstack](https://github.com/pstack-ports/agy-pstack). Bundles `deslop`, `control-cli`, and `control-ui`. See [UPSTREAM.md](./UPSTREAM.md) for the source pin and port scope.
 
 Skills live only in `.agents/skills/`. The [Codex adapter](./docs/harness/codex.md) maps preserved upstream tool names to the current session and is loaded by every skill. The original author's introduction follows.
 
@@ -258,7 +258,7 @@ twenty-four short skills, one principle each. `poteto-mode` indexes them inline 
 
 ## bundled dependencies
 
-This port includes `deslop`, `control-cli`, and `control-ui` under `.agents/skills/`; no cursor-team-kit installation is needed. Skill authoring uses `skill-creator` when available, otherwise the adapter's Codex format guidance. PR-status work uses pstack's own Babysit playbook.
+This port includes `deslop`, `control-cli`, and `control-ui` under `.agents/skills/`. Skill authoring uses `skill-creator` when available, otherwise the adapter's Codex format guidance. PR-status work uses pstack's own Babysit playbook.
 
 ## why are there no planning skills?
 

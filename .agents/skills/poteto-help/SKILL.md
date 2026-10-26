@@ -114,7 +114,6 @@ Close calls:
 
 Not in pstack:
 
-- `/deslop`, `control-cli`, and `control-ui` ship in the `cursor-team-kit` plugin.
 - Long-running goals depend on the available Codex host. Skill authoring uses `skill-creator` when installed, otherwise the adapter's format guidance.
 - pstack has no `/orchestrate` skill. Orchestrate is a `/poteto-mode` playbook. If the slash menu shows `/orchestrate`, another plugin provides it.
 
