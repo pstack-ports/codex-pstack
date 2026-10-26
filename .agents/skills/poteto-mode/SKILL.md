@@ -1,6 +1,8 @@
 ---
 name: poteto-mode
 description: poteto's agent style for concise, detailed responses, deliberate subagents, unslopped prose, simple code, and verified work. Use for poteto, /poteto-mode, or requests to work in this style.
+icon: crown
+color: yellow
 ---
 
 Before following this workflow, read the [Codex adapter](../poteto-mode/references/codex.md) once per session. Its tool, model, and host mappings apply to the upstream terminology below.
