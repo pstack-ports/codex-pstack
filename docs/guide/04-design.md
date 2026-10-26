@@ -1,8 +1,5 @@
 # Design before you write code
 
-> Codex port: use `$skill-name` to invoke skills. The [Codex adapter](../harness/codex.md) translates the upstream tool names, model defaults, history, and automation instructions below. Follow the [README](../../README.md) for installation; upstream UI gestures and external service availability depend on the host.
-
-
 One attempt at a hard design locks in the first shape the model thought of. `/architect` settles types and boundaries before implementation. `/arena` runs several attempts at the same brief and merges the best parts. `/interrogate` has other models try to break the result. When the job is coverage rather than design synthesis, `/swarm` fans out slices or races and aggregates their results.
 
 The two most common design mistakes are taking the agent's first design and polishing a plan that no code has tested. This page fixes both. You plan through code. Prototypes answer the open questions, a README or tutorial sets the target, and the written plan comes last.
