@@ -7,9 +7,9 @@ the files in this directory are dormant setup and automation sources. they do no
 ## set it up
 
 1. point cursor at [`FOR_AGENTS.md`](./FOR_AGENTS.md) and name the target repository.
-2. let setup merge this whole directory into the target at `.cursor/automations/benny/`. it must preserve destination-only files and review conflicts instead of overwriting local edits.
+2. let setup merge this whole directory into the target at `.agents/automations/benny/`. it must preserve destination-only files and review conflicts instead of overwriting local edits.
 3. let setup resolve pstack from the target project's `.agents/skills/` installation for shared dependencies. codex has no `.cursor/settings.json`.
 
-4. keep user-owned configuration outside the copied pack, for example in `.cursor/benny/`. adapt [`configuration.example.yaml`](./templates/configuration.example.yaml) and [`feature-map.example.md`](./.agents/skills/reproduce-and-fix-issues/references/feature-map.example.md).
-5. commit the target project's `.agents/skills/` installation, `.cursor/automations/benny/`, and any secret-free configuration before enabling either automation.
+4. keep user-owned configuration outside the copied pack, for example in `.agents/benny/`. adapt [`configuration.example.yaml`](./templates/configuration.example.yaml) and [`feature-map.example.md`](./.agents/skills/reproduce-and-fix-issues/references/feature-map.example.md).
+5. commit the target project's `.agents/skills/` installation, `.agents/automations/benny/`, and any secret-free configuration before enabling either automation.
 6. review each new automation draft or update existing automations in their editors. then send a harmless test report and verify every source-channel post stays in the original thread.
