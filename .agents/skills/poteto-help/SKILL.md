@@ -114,7 +114,8 @@ Close calls:
 
 Not in pstack:
 
-- Long-running goals depend on the available Codex host. Skill authoring uses `skill-creator` when installed, otherwise the adapter's format guidance.
+- `/deslop`, `control-cli`, and `control-ui` ship in this plugin.
+- `/loop` is not a separate pstack skill. Skill authoring uses `skill-creator` when installed, otherwise the adapter's format guidance.
 - pstack has no `/orchestrate` skill. Orchestrate is a `/poteto-mode` playbook. If the slash menu shows `/orchestrate`, another plugin provides it.
 
 ## Playbooks and principles
