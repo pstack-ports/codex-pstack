@@ -37,7 +37,6 @@ Codex has no `.cursor/settings.json`. Resolve shared pstack skills from the targ
 
 Reload the target project or start a fresh agent rooted there. Verify that these shared pstack skills resolve from project scope:
 
-- `how`
 - `why`
 - `tdd`
 - `unslop`

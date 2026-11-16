@@ -2,7 +2,7 @@
 
 Imported unchanged before the Codex port:
 
-- `pstack/` from [`cursor/plugins` at `c742dd61706fbacc1b95f1a20b7b988cf096ce6c`](https://github.com/cursor/plugins/tree/c742dd61706fbacc1b95f1a20b7b988cf096ce6c/pstack), version `0.15.36`, by Lauren Tan.
+- `pstack/` from [`cursor/plugins` at `bf0c7cd80abdbf7fe47b634978a7d1b4071f71a7`](https://github.com/cursor/plugins/tree/bf0c7cd80abdbf7fe47b634978a7d1b4071f71a7/pstack), version `0.15.42`, by Lauren Tan.
 - `deslop`, `control-cli`, and `control-ui` skills from cursor/plugins at the same commit, by Eric Zakariasson, following the [agy-pstack example](https://github.com/pstack-ports/agy-pstack).
 
 The first Git commit is the imported source snapshot. The Codex port follows in a separate commit for review. The original MIT license and assets are retained.
