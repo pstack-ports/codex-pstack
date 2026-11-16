@@ -46,7 +46,7 @@ If cost is the worry, say where the tokens go and how to spend fewer. pstack spe
 
 This port runs in Codex. Use `$pstack:poteto-mode` or `$pstack:setup-pstack`; skills live only in `.agents/skills/`. Read the local README for installation and the Codex adapter for host capabilities.
 
-Other tools can read the skills, because they use the Agent Skills format. But most workflow skills, including `/poteto-mode`, `/how`, `/why`, and `/teach`, spawn Cursor subagents with per-role models, and Custom Modes and `/loop` are Cursor features, so those parts may not work there.
+Other tools can read the skills, because they use the Agent Skills format. But most workflow skills, including `/poteto-mode`, `/how`, and `/teach`, spawn Cursor subagents, some with per-role models, and Custom Modes and `/loop` are Cursor features, so those parts may not work there.
 
 ## Start a task with `/poteto-mode`
 

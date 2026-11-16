@@ -29,7 +29,7 @@ i want two cursor automations that work together in one slack issue channel.
 - i treat utility and debug bots as evidence, not delegation or fix ownership.
 - i allow subagents to help, but they cannot post to slack or receive slack credentials.
 - i want this entire pack committed at `.agents/automations/benny/` in the target repository. its `SKILL.md` files are direct automation instructions, not registered plugin skills.
-- i want pstack enabled through the target project's `.agents/skills/` installation only for shared dependencies such as `how`, `why`, `tdd`, `unslop`, and the required principle skills.
+- i want pstack enabled through the target project's `.agents/skills/` installation only for shared dependencies such as `why`, `tdd`, `unslop`, and the required principle skills.
 - i want each live automation prompt to read its committed operational file directly. i do not want plugin cache paths, copied excerpts, or slash-skill discovery.
 - i keep user-owned configuration, feature maps, routing maps, and secrets outside `.agents/automations/benny/` so pack refreshes cannot overwrite them.
 - i want both automations to fail closed when channel coordinates, tracker access, the control adapter, or the feature map are missing or uncertain.
@@ -66,7 +66,7 @@ the human enters setup by pointing cursor at this file. do not look for or invok
 
 codex has no `.cursor/settings.json`. resolve shared pstack dependencies from the target project's `.agents/skills/` installation. if those skills are absent, copy the pstack `.agents/skills/` tree into the target project. preserve unrelated files. do not write editor plugin settings.
 
-i want verification from a fresh agent rooted in the target repository. confirm that pstack's `how`, `why`, `tdd`, `unslop`, and the principle skills used by benny resolve in project scope. do not count skills loaded from the current session or a user-scoped install.
+i want verification from a fresh agent rooted in the target repository. confirm that pstack's `why`, `tdd`, `unslop`, and the principle skills used by benny resolve in project scope. do not count skills loaded from the current session or a user-scoped install.
 
 if project-scoped plugins are unavailable or any shared dependency does not resolve, stop and explain what failed. do not add `.agents/automations/benny/.agents/skills/` to a plugin manifest or expect its files to appear in the slash-skill list.
 

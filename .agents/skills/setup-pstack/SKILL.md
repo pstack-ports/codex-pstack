@@ -13,7 +13,17 @@ Write `.agents/pstack-models.md` in the active project. Use `~/.agents/pstack-mo
 
 Use the actual subagent tool schema or a model-list capability exposed by this Codex session. Validate reasoning levels separately from model IDs. Do not infer entitlement from public documentation or copy a model slug from upstream. If the host cannot enumerate overrides, offer `inherit-parent` and `auto`; ask for a validated model only when the user wants an override.
 
-Read project configuration first, otherwise personal configuration. Preserve existing role choices. With no file, every role inherits the parent model and reasoning. Panel defaults are two independent workers on the parent model.
+Read project configuration first, otherwise personal configuration. The default role-to-model mapping is the shape in section 3. If a configuration file already exists, read it and treat its `# budget` line and its role values as the current choices. Otherwise start from those defaults. A line whose role is not in section 3, such as `how explorer` or `why investigators`, is from a retired role. Drop it.
+
+A file without the `# defaults: 2` line comes from an older setup. That setup wrote a line for every role, so some of its values are old defaults, not choices. An old slug is one that matches `grok-*`. Before section 2, replace these values:
+
+- An old slug in `feature, refactoring`, `bug-fix`, `perf-issue`, `hillclimb`, `reflect tooling`, or `swarm workers` takes the role's section 3 default.
+- A `claude-opus-*` value in `hardest tasks` takes the role's section 3 default.
+- In a panel role (`arena runners`, `arena cross-judge pool`, `architect runners`, `interrogate reviewers`), a list of exactly one `claude-opus-*` entry and one old slug, in either order, takes the role's section 3 list. In any other list, each old slug becomes `inherit-parent`.
+
+Every other value is the user's choice and stays, including an old slug in any other role and every `inherit-parent` or `auto` value. Tell the user which values you replaced.
+
+With no file, every role inherits the parent model and reasoning. Panel defaults are three independent workers on the parent model.
 
 ## 2. Choose the budget and models
 
@@ -25,9 +35,9 @@ Use the available user-input tool, or a concise text question when it is unavail
 - `medium` — high reasoning when supported
 - `small` — medium reasoning when supported
 
-A budget changes only explicit model entries. For each entry, choose a supported reasoning level at or below the requested level. If none is known, leave effort inherited and disclose it. Model IDs and reasoning are separate values; never construct an effort-suffixed model slug. `auto` and `inherit-parent` always inherit both.
+A budget changes only explicit reasoning levels. `inherit-parent` and `auto` do not change. For an explicit entry, move its reasoning level on the ladder `max` > `xhigh` > `high` > `medium` > `low`: `large` keeps it, `unlimited` raises it one step, `medium` lowers it one step, and `small` lowers it two steps. A target at either end of the ladder stays there. Choose a supported level at or below the target. If none is known, leave effort inherited and disclose it. Model IDs and reasoning are separate values; never construct an effort-suffixed model slug.
 
-Show all roles and their values, plus any removed retired roles. Let the user accept or change specific roles. A scalar role takes `inherit-parent`, `auto`, `<validated-model>`, or `<validated-model> <validated-effort>`. Panel roles take comma-separated entries; every entry, including aliases, creates one seat. `arena cross-judge pool` is a pool, but Arena runs one judge. It tries only values from a family other than the parent's, in list order, so order it by preference. An `inherit-parent` or `auto` value never judges.
+Show all roles and their values, plus any removed retired roles. Let the user accept or change specific roles. A scalar role takes `inherit-parent`, `auto`, `<validated-model>`, or `<validated-model> <validated-effort>`. Panel roles take comma-separated entries; every entry, including aliases, creates one seat. `arena cross-judge pool` is a pool, but Arena runs one judge. It tries only values from a vendor other than the parent's, in list order, so order it by preference. Fable and the other Claude models are one vendor. An `inherit-parent` or `auto` value never judges.
 
 ## 3. Validate and write
 
@@ -37,6 +47,7 @@ Write the complete file idempotently, preserving the chosen scope. No YAML front
 
 ```text
 # pstack model configuration. Missing roles inherit the parent.
+# defaults: 2
 # budget: inherit-parent
 feature, refactoring: inherit-parent
 bug-fix: inherit-parent
@@ -44,17 +55,13 @@ perf-issue: inherit-parent
 hillclimb: inherit-parent
 judgment and prose: inherit-parent
 hardest tasks: inherit-parent
-how explorer: inherit-parent
-how explainer: inherit-parent
-why investigators: inherit-parent
-why synthesizer: inherit-parent
 reflect tooling: inherit-parent
 reflect judgment, divergent, synthesizer: inherit-parent
-arena runners: inherit-parent, inherit-parent
-arena cross-judge pool: inherit-parent, inherit-parent
+arena runners: inherit-parent, inherit-parent, inherit-parent
+arena cross-judge pool: inherit-parent, inherit-parent, inherit-parent
 swarm workers: inherit-parent
-architect runners: inherit-parent, inherit-parent
-interrogate reviewers: inherit-parent, inherit-parent
+architect runners: inherit-parent, inherit-parent, inherit-parent
+interrogate reviewers: inherit-parent, inherit-parent, inherit-parent
 ```
 
 Role labels can contain commas. Split a line at its first colon before parsing its scalar or panel value. Do not change Codex's global model configuration, managed settings, or `AGENTS.md`.

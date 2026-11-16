@@ -1,6 +1,6 @@
 # pstack for Codex
 
-Codex port of [pstack](https://github.com/cursor/plugins/tree/c742dd61706fbacc1b95f1a20b7b988cf096ce6c/pstack) `0.15.36` by Lauren Tan, following [agy-pstack](https://github.com/pstack-ports/agy-pstack). Bundles `deslop`, `control-cli`, and `control-ui`. See [UPSTREAM.md](./UPSTREAM.md) for the source pin and port scope.
+Codex port of [pstack](https://github.com/cursor/plugins/tree/bf0c7cd80abdbf7fe47b634978a7d1b4071f71a7/pstack) `0.15.42` by Lauren Tan, following [agy-pstack](https://github.com/pstack-ports/agy-pstack). Bundles `deslop`, `control-cli`, and `control-ui`. See [UPSTREAM.md](./UPSTREAM.md) for the source pin and port scope.
 
 Skills live only in `.agents/skills/`. The [Codex adapter](./docs/harness/codex.md) maps preserved upstream tool names to the current session and is loaded by every skill. The original author's introduction follows.
 
@@ -109,7 +109,7 @@ For long tasks, explicitly request the available Codex goal or continuation faci
 
 ## skills
 
-[`$pstack:poteto-mode`](.agents/skills/poteto-mode/SKILL.md) runs most of these for you when a step needs them (`how`, `why`, `architect`, `arena`, `swarm`, `interrogate`, `unslop`, `no-comments`, `technical-writing`, `tdd`, and the principles). the table below is for when you want one directly:
+[`$pstack:poteto-mode`](.agents/skills/poteto-mode/SKILL.md) runs most of these for you when a step needs them (`why`, `architect`, `arena`, `swarm`, `interrogate`, `unslop`, `no-comments`, `technical-writing`, `tdd`, and the principles). the table below is for when you want one directly:
 
 ```
 $pstack:how do we cancel runs? do we have an n+1 when we look up every run to cancel?
@@ -127,9 +127,9 @@ $pstack:interrogate review this pr.
 | [`$pstack:poteto-mode`](.agents/skills/poteto-mode/SKILL.md) | default entry point for any non-trivial task. |
 | [`$pstack:poteto-help`](.agents/skills/poteto-help/SKILL.md) | you're new to pstack, or unsure which skill, playbook, or principle fits. finds out what you're trying to do, answers that part, and hands you a prompt to type. runs only when you type `$pstack:poteto-help`. |
 | [`$pstack:in-your-own-words`](.agents/skills/in-your-own-words/SKILL.md) | you want the agent to play back your goal and the problem before it starts. runs only when you type `$pstack:in-your-own-words`. |
-| [`$pstack:sharpen`](.agents/skills/sharpen/SKILL.md) | you want a prompt made deeper, not bigger, before you send it: what a top professional would do that you didn't ask for, the raw material they'd start from, their methods and tools, and an outside check that the result is right. hands back the rewritten prompt and leaves your choices open. doesn't do the task. runs only when you type `$pstack:sharpen`. |
+| [`$pstack:sharpen`](.agents/skills/sharpen/SKILL.md) | you want a prompt made deeper, not bigger, before you send it: what a top professional would do that you didn't ask for, the raw material they'd start from, their methods and tools, and an outside check that the result is right. hands back the rewritten prompt, which asks the agent to prototype any choice an experiment can settle and leaves product and preference choices to you. doesn't do the task. runs only when you type `$pstack:sharpen`. |
 | [`$pstack:how`](.agents/skills/how/SKILL.md) | you want a walkthrough of how a subsystem works. |
-| [`$pstack:why`](.agents/skills/why/SKILL.md) | you want to know why something was built this way. discovers available MCPs at run time and queries each evidence category in parallel (source control, issue tracker, long-form docs, real-time chat, infra observability, error tracking, analytics warehouse). |
+| [`$pstack:why`](.agents/skills/why/SKILL.md) | you want to know why something was built this way. answers from the record, not the code: the commits and pr discussions that introduced it and each later change, and other sources when that trail is thin. cites what the authors wrote, marks its own inferences, and says what the record does not answer. |
 | [`$pstack:recall`](.agents/skills/recall/SKILL.md) | you're starting or resuming work and want your recent context on a topic rebuilt from your own chat history and the shared record, handed back as a tight current-state brief. |
 | [`$pstack:ketchup`](.agents/skills/ketchup/SKILL.md) | you want what changed in this chat since your last message, in plain words and small visuals, with every item waiting on you listed and decidable from the reply alone, even when that makes the reply long. |
 | [`$pstack:ketchup-video`](.agents/skills/ketchup-video/SKILL.md) | you want the `$pstack:ketchup` catch-up as a short subtitled video of slides, with the calls waiting on you as text under it. |
@@ -272,7 +272,7 @@ type [`$pstack:automate-me`](.agents/skills/automate-me/SKILL.md). it mines your
 
 models are configurable too. type [`$pstack:setup-pstack`](.agents/skills/setup-pstack/SKILL.md). it detects the models you have access to and writes a small configuration file, explicitly read by pstack, mapping each role (code, judgment, the review panels) to a model. every skill reads it and falls back to sensible defaults when the rule is absent, so you override only what you want.
 
-when a default changes, a rule written before the change still pins the old default. delete those role lines, or delete the file, then run `$pstack:setup-pstack` again. a rerun keeps any role whose model differs from the default.
+when a default changes, a rule written before the change still pins the old default until you run `$pstack:setup-pstack` again. that run replaces the old defaults it recognizes and keeps any other role whose model differs from the default. to drop a pin it does not recognize, delete that role's line or the file first.
 
 ## automations
 
