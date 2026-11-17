@@ -17,7 +17,7 @@ Read project configuration first, otherwise personal configuration. The default 
 
 A file without the `# defaults: 3` line comes from an older setup. That setup wrote a line for every role, so some of its values are old defaults, not choices. Before section 2, replace these values:
 
-- An `arena cross-judge pool` list of exactly one `claude-fable-*` entry, one `claude-opus-*` entry, and one `gemini-*` entry, in any order, takes the role's section 3 list.
+- An `arena cross-judge pool` list of exactly one `claude-fable-*` entry, one `claude-opus-*` entry, and one `gemini-*` entry, in any order, takes the role's section 3 list. Fable and Opus are one vendor, so the Fable entry could judge only where the Opus entry also could.
 - A list of exactly three `inherit-parent` entries in `arena cross-judge pool` is the previous default for that pool. It takes the role's section 3 list.
 - A `# budget: unlimited` line becomes `large`, because no role runs above `xhigh`.
 - If the file has no `# defaults: 2` line either, an old slug is one that matches `grok-*`. An old slug in `feature, refactoring`, `bug-fix`, `perf-issue`, `hillclimb`, or `swarm workers` takes the role's section 3 default. In a panel role (`arena runners`, `arena cross-judge pool`, `interrogate reviewers`), a list of exactly one `claude-opus-*` entry and one old slug, in either order, takes the role's section 3 list. In any other list, each old slug becomes `inherit-parent`.
