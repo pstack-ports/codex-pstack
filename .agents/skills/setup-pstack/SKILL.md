@@ -13,54 +13,50 @@ Write `.agents/pstack-models.md` in the active project. Use `~/.agents/pstack-mo
 
 Use the actual subagent tool schema or a model-list capability exposed by this Codex session. Validate reasoning levels separately from model IDs. Do not infer entitlement from public documentation or copy a model slug from upstream. If the host cannot enumerate overrides, offer `inherit-parent` and `auto`; ask for a validated model only when the user wants an override.
 
-Read project configuration first, otherwise personal configuration. The default role-to-model mapping is the shape in section 3. If a configuration file already exists, read it and treat its `# budget` line and its role values as the current choices. Otherwise start from those defaults. A line whose role is not in section 3, such as `how explorer` or `why investigators`, is from a retired role. Drop it.
+Read project configuration first, otherwise personal configuration. The default role-to-model mapping is the shape in section 3. If a configuration file already exists, read it and treat its `# budget` line and its role values as the current choices. Otherwise start from those defaults. A line whose role is not in section 3, such as `hardest tasks`, `architect runners`, `reflect tooling`, or `why investigators`, is from a retired role. Drop it.
 
-A file without the `# defaults: 2` line comes from an older setup. That setup wrote a line for every role, so some of its values are old defaults, not choices. An old slug is one that matches `grok-*`. Before section 2, replace these values:
+A file without the `# defaults: 3` line comes from an older setup. That setup wrote a line for every role, so some of its values are old defaults, not choices. Before section 2, replace these values:
 
-- An old slug in `feature, refactoring`, `bug-fix`, `perf-issue`, `hillclimb`, `reflect tooling`, or `swarm workers` takes the role's section 3 default.
-- A `claude-opus-*` value in `hardest tasks` takes the role's section 3 default.
-- In a panel role (`arena runners`, `arena cross-judge pool`, `architect runners`, `interrogate reviewers`), a list of exactly one `claude-opus-*` entry and one old slug, in either order, takes the role's section 3 list. In any other list, each old slug becomes `inherit-parent`.
+- An `arena cross-judge pool` list of exactly one `claude-fable-*` entry, one `claude-opus-*` entry, and one `gemini-*` entry, in any order, takes the role's section 3 list. Fable and Opus are one vendor, so the Fable entry could judge only where the Opus entry also could.
+- A list of exactly three `inherit-parent` entries in `arena cross-judge pool` is the previous default for that pool. It takes the role's section 3 list.
+- A `# budget: unlimited` line becomes `large`, because no role runs above `xhigh`.
+- If the file has no `# defaults: 2` line either, an old slug is one that matches `grok-*`. An old slug in `feature, refactoring`, `bug-fix`, `perf-issue`, `hillclimb`, or `swarm workers` takes the role's section 3 default. In a panel role (`arena runners`, `arena cross-judge pool`, `interrogate reviewers`), a list of exactly one `claude-opus-*` entry and one old slug, in either order, takes the role's section 3 list. In any other list, each old slug becomes `inherit-parent`.
 
 Every other value is the user's choice and stays, including an old slug in any other role and every `inherit-parent` or `auto` value. Tell the user which values you replaced.
 
-With no file, every role inherits the parent model and reasoning. Panel defaults are three independent workers on the parent model.
+With no file, every role inherits the parent model and reasoning. `arena runners` and `interrogate reviewers` are three seats on the parent model. `arena cross-judge pool` is two.
 
 ## 2. Choose the budget and models
 
 Use the available user-input tool, or a concise text question when it is unavailable. Offer:
 
 - `inherit-parent` — keep the session's model and reasoning
-- `unlimited` — max reasoning when supported
 - `large` — xhigh reasoning when supported
 - `medium` — high reasoning when supported
 - `small` — medium reasoning when supported
 
-A budget changes only explicit reasoning levels. `inherit-parent` and `auto` do not change. For an explicit entry, move its reasoning level on the ladder `max` > `xhigh` > `high` > `medium` > `low`: `large` keeps it, `unlimited` raises it one step, `medium` lowers it one step, and `small` lowers it two steps. A target at either end of the ladder stays there. Choose a supported level at or below the target. If none is known, leave effort inherited and disclose it. Model IDs and reasoning are separate values; never construct an effort-suffixed model slug.
+A budget changes only explicit reasoning levels. `inherit-parent` and `auto` do not change. For an explicit entry, move its reasoning level on the ladder `xhigh` > `high` > `medium` > `low`: `large` keeps it, `medium` lowers it one step, and `small` lowers it two steps. No role runs above `xhigh`, and a target at the bottom of the ladder stays there. Choose a supported level at or below the target. If none is known, leave effort inherited and disclose it. Model IDs and reasoning are separate values; never construct an effort-suffixed model slug.
 
 Show all roles and their values, plus any removed retired roles. Let the user accept or change specific roles. A scalar role takes `inherit-parent`, `auto`, `<validated-model>`, or `<validated-model> <validated-effort>`. Panel roles take comma-separated entries; every entry, including aliases, creates one seat. `arena cross-judge pool` is a pool, but Arena runs one judge. It tries only values from a vendor other than the parent's, in list order, so order it by preference. Fable and the other Claude models are one vendor. An `inherit-parent` or `auto` value never judges.
 
 ## 3. Validate and write
 
-Every explicit model and reasoning level must be supported by the session. Never guess a replacement when a model is unavailable. Explain the issue and keep the previous configuration until the user chooses a valid value.
+Every explicit model and reasoning level must be supported by the session. Never guess a replacement when a model is unavailable. Explain the issue and keep the previous configuration until the user chooses a valid value. No role runs above `xhigh`.
 
 Write the complete file idempotently, preserving the chosen scope. No YAML frontmatter is needed. Default shape:
 
 ```text
 # pstack model configuration. Missing roles inherit the parent.
-# defaults: 2
+# defaults: 3
 # budget: inherit-parent
 feature, refactoring: inherit-parent
 bug-fix: inherit-parent
 perf-issue: inherit-parent
 hillclimb: inherit-parent
 judgment and prose: inherit-parent
-hardest tasks: inherit-parent
-reflect tooling: inherit-parent
-reflect judgment, divergent, synthesizer: inherit-parent
 arena runners: inherit-parent, inherit-parent, inherit-parent
-arena cross-judge pool: inherit-parent, inherit-parent, inherit-parent
+arena cross-judge pool: inherit-parent, inherit-parent
 swarm workers: inherit-parent
-architect runners: inherit-parent, inherit-parent, inherit-parent
 interrogate reviewers: inherit-parent, inherit-parent, inherit-parent
 ```
 
