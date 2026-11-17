@@ -1,6 +1,6 @@
 # pstack for Codex
 
-Codex port of [pstack](https://github.com/cursor/plugins/tree/bf0c7cd80abdbf7fe47b634978a7d1b4071f71a7/pstack) `0.15.42` by Lauren Tan, following [agy-pstack](https://github.com/pstack-ports/agy-pstack). Bundles `deslop`, `control-cli`, and `control-ui`. See [UPSTREAM.md](./UPSTREAM.md) for the source pin and port scope.
+Codex port of [pstack](https://github.com/cursor/plugins/tree/2f87c854fe3e2fcda44ca86b46ede35aad3c46b7/pstack) `0.15.43` by Lauren Tan, following [agy-pstack](https://github.com/pstack-ports/agy-pstack). Bundles `deslop`, `control-cli`, and `control-ui`. See [UPSTREAM.md](./UPSTREAM.md) for the source pin and port scope.
 
 Skills live only in `.agents/skills/`. The [Codex adapter](./docs/harness/codex.md) maps preserved upstream tool names to the current session and is loaded by every skill. The original author's introduction follows.
 
@@ -40,7 +40,7 @@ two steps:
 
 new here? the [pstack guide](./docs/guide/README.md) walks you through a first real task, from setup and prompting through verification and overnight runs. stuck, or unsure which skill fits? ask [`$pstack:poteto-help`](.agents/skills/poteto-help/SKILL.md).
 
-that's it. the other skills are situational. The adapter reads `.agents/pstack-models.md`, then `~/.agents/pstack-models.md`, and defaults to inheriting the parent model and reasoning. Panel lists preserve the upstream worker count.
+that's it. the other skills are situational, and the mode skill uses them for you as needed. The adapter reads `.agents/pstack-models.md`, then `~/.agents/pstack-models.md`, and defaults to inheriting the parent model and reasoning. Panel lists preserve the upstream worker count.
 
 ## usage
 
@@ -50,7 +50,7 @@ Type `$pstack:poteto-mode` with your task, or select it from Codex's skill picke
 
 ### just use [`$pstack:poteto-mode`](.agents/skills/poteto-mode/SKILL.md)
 
-this skill is the main shortcut. i use it whenever i need the agent to do rigorous engineering work. it comes with twenty-three playbooks:
+this skill is the main shortcut. i use it whenever i need the agent to do rigorous engineering work. it comes with twenty-two playbooks:
 
 ```
 $pstack:poteto-mode this pr has a subtle bug where the scroll drifts every 750ms even when idle. repro
@@ -63,7 +63,7 @@ morning.
 ```
 
 <details>
-<summary>the twenty-three playbooks</summary>
+<summary>the twenty-two playbooks</summary>
 
 | playbook | for |
 |---|---|
@@ -82,7 +82,6 @@ morning.
 | [babysit](.agents/skills/poteto-mode/playbooks/babysit.md) | drive a pr or a stack to merge-ready: conflicts, review threads, ci. |
 | [shipping](.agents/skills/poteto-mode/playbooks/shipping.md) | independently verify a green stack, then land the contiguous verified run bottom-up through github by default or origin when available. |
 | [autonomous run](.agents/skills/poteto-mode/playbooks/autonomous-run.md) | drive a long task to completion without stopping. |
-| [orchestrate](.agents/skills/poteto-mode/playbooks/orchestrate.md) | a standing project handed to one coordinator chat: multi-day, many stacked prs, fleets of subagents. |
 | [autopilot-full](.agents/skills/poteto-mode/playbooks/autopilot-full.md) | run independent prs to merged with one owner per pr. a swarm verifies each code-ready head, and every later change to the patch gets a fresh check. |
 | [autopilot-stack](.agents/skills/poteto-mode/playbooks/autopilot-stack.md) | autopilot-full without the merge. build and verify prs for the operator to review and land, stacking a pr only on a pr it builds on. |
 | [session pickup](.agents/skills/poteto-mode/playbooks/session-pickup.md) | resume or take over a prior agent's in-flight work. |
@@ -139,7 +138,7 @@ $pstack:interrogate review this pr.
 | [`$pstack:swarm`](.agents/skills/swarm/SKILL.md) | you want N parallel workers across different slices or races, then one aggregated report. |
 | [`$pstack:interrogate`](.agents/skills/interrogate/SKILL.md) | you have a diff and want different models to try to break it, keeping only findings a run proves. |
 | [`$pstack:automate-me`](.agents/skills/automate-me/SKILL.md) | you want your own `-mode` skill, drafted from how you've actually worked. |
-| [`$pstack:make-bot-ui`](.agents/skills/make-bot-ui/SKILL.md) | you want a page or dashboard whose buttons start Codex through a local server, with optional authenticated webhooks and Tailscale. |
+| [`$pstack:make-bot-ui`](.agents/skills/make-bot-ui/SKILL.md) | you want a page or dashboard whose buttons wake a Grok Bot over a webhook, including the sender-key handoff and Tailscale. |
 | [`$pstack:setup-pstack`](.agents/skills/setup-pstack/SKILL.md) | you want to pick which models pstack uses per role. detects your models and writes a config rule. |
 | [`$pstack:reflect`](.agents/skills/reflect/SKILL.md) | a long task landed and you want the recipe captured as a skill edit. |
 | [`$pstack:correct`](.agents/skills/correct/SKILL.md) | you keep correcting agents for the same mistakes. mines history for mistake classes, fixes each at the highest level that works (architecture, then types, lint, and ci, then tests, with docs last), and keeps a table pairing each rule with what enforces it. |
