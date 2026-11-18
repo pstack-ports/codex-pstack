@@ -273,12 +273,6 @@ models are configurable too. type [`$pstack:setup-pstack`](.agents/skills/setup-
 
 when a default changes, a rule written before the change still pins the old default until you run `$pstack:setup-pstack` again. that run replaces the old defaults it recognizes and keeps any other role whose model differs from the default. to drop a pin it does not recognize, delete that role's line or the file first.
 
-## automations
-
-pstack also ships a dormant [benny automation pack](./automations/benny/). benny triages slack issue reports, then reproduces and fixes confirmed bugs with real ui evidence. its files are not registered as slash skills.
-
-to set it up, point Codex at [`FOR_AGENTS.md`](./automations/benny/FOR_AGENTS.md). setup copies the pack into the target repository at `.agents/automations/benny/`, resolves shared pstack skills from `.agents/skills/`, and keeps user configuration outside the copied pack. Live Slack triggers need a documented external event runner or a host automation integration that supports them. Without one, setup prepares the configuration and prompts and reports that activation is pending.
-
 ## license
 
 MIT

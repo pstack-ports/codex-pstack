@@ -7,6 +7,8 @@ Imported unchanged before the Codex port:
 
 The first Git commit is the imported source snapshot. The Codex port follows in a separate commit for review. The original MIT license and assets are retained.
 
-The port moves skills to `.agents/skills/`, replaces the manifests with `.codex-plugin/plugin.json`, converts explicit-only skill metadata to `agents/openai.yaml`, and adds one shared host adapter. Most workflow bodies and all core orchestration, PR-watching, and statechart logic remain upstream. Setup, webhook UI instructions, transcript discovery, and Benny's host integration are adapted where their original APIs do not exist in Codex.
+The port moves skills to `.agents/skills/`, replaces the manifests with `.codex-plugin/plugin.json`, converts explicit-only skill metadata to `agents/openai.yaml`, and adds one shared host adapter. Most workflow bodies and all core orchestration, PR-watching, and statechart logic remain upstream. Setup, webhook UI instructions, and transcript discovery are adapted where their original APIs do not exist in Codex.
+
+Future upstream syncs must skip the Benny automation pack (`pstack/automations/benny/`).
 
 This repository targets Codex only. It does not register Cursor or Claude Code compatibility layouts. External Slack/tracker integrations, event runners, and repository-specific verification tools remain prerequisites for the workflows that use them.
