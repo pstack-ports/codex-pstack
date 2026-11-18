@@ -27,9 +27,6 @@ repo="${1:-$(git rev-parse --show-toplevel 2>/dev/null)}"
 cd "$repo" || exit 1
 git rev-parse --git-dir >/dev/null 2>&1 || { echo "error: not a git repo: $repo" >&2; exit 1; }
 
-# Main worktree is the first entry; everything else is a candidate.
-main_wt=$(git worktree list --porcelain | awk '/^worktree /{print $2; exit}')
-
 if [ -z "$base" ]; then
 	for cand in "$(git symbolic-ref --short refs/remotes/origin/HEAD 2>/dev/null)" origin/main origin/master; do
 		[ -n "$cand" ] && git rev-parse --verify --quiet "$cand^{commit}" >/dev/null && { base="$cand"; break; }
@@ -50,15 +47,17 @@ git rev-parse --verify --quiet "$base^{commit}" >/dev/null 2>&1 || { echo "error
 # GNU coreutils (Linux, Homebrew gnubin) reads `stat -f` as file system status
 # and `date -r` as a file, so pick the stat and date flags once.
 if stat -c %Y / >/dev/null 2>&1; then
-	stat_fmt=(-c '%Y %n'); fmt_day() { date -d "@$1" '+%Y-%m-%d'; }
+	stat_fmt=(-c '%Y'); fmt_day() { date -d "@$1" '+%Y-%m-%d'; }
 else
-	stat_fmt=(-f '%m %N'); fmt_day() { date -r "$1" '+%Y-%m-%d'; }
+	stat_fmt=(-f '%m'); fmt_day() { date -r "$1" '+%Y-%m-%d'; }
 fi
 
-# PR state by branch, fetched once as [{number, state, head}] with a lowercase
-# state. Origin when its CLI can read this repo's PRs, otherwise gh. Empty when
-# neither can.
-prs=$(mktemp)
+audit_tmp=$(mktemp -d) || exit 1
+trap 'rm -rf "$audit_tmp"' EXIT
+git worktree list --porcelain -z > "$audit_tmp/worktrees" || exit 1
+
+# Look up PR state once, using Origin when available and gh otherwise.
+prs="$audit_tmp/prs"
 if command -v origin >/dev/null 2>&1 \
 	&& raw=$(origin pr list --author "@me" --state all --limit 1000 \
 		--json number,status,headRef 2>/dev/null); then
@@ -76,8 +75,12 @@ now=$(date +%s)
 echo "# base: $base"
 printf "SIZE\tAGE\tMERGED\tDIRTY\tREMOTE\tPR\tLAST_CHAT\tBUCKET\tWORKTREE\n"
 
-git worktree list --porcelain | awk '/^worktree /{print $2}' | while read -r wt; do
-	[ "$wt" = "$main_wt" ] && continue
+# Git lists the main worktree first. Keep the full path from each NUL-delimited field.
+first=true
+while IFS= read -r -d '' field; do
+	[[ $field == 'worktree '* ]] || continue
+	if [ "$first" = true ]; then first=false; continue; fi
+	wt=${field#worktree }
 
 	size=$(du -sh "$wt" 2>/dev/null | awk '{print $1}')
 	head=$(git -C "$wt" rev-parse HEAD 2>/dev/null)
@@ -89,8 +92,8 @@ git worktree list --porcelain | awk '/^worktree /{print $2}' | while read -r wt;
 	git merge-base --is-ancestor "$head" "$base" 2>/dev/null && merged=YES || merged=no
 
 	# Distinguish real WIP (tracked edits) from disposable untracked scratch.
-	porcelain=$(git -C "$wt" status --porcelain 2>/dev/null)
-	if [ -z "$porcelain" ]; then dirty=clean
+	if ! porcelain=$(git -C "$wt" status --porcelain 2>/dev/null); then dirty=unknown
+	elif [ -z "$porcelain" ]; then dirty=clean
 	elif printf '%s\n' "$porcelain" | grep -qv '^??'; then
 		dirty="wip:$(printf '%s\n' "$porcelain" | grep -cv '^??')"
 	else dirty="scratch:$(printf '%s\n' "$porcelain" | grep -c '^??')"; fi
@@ -111,14 +114,15 @@ git worktree list --porcelain | awk '/^worktree /{print $2}' | while read -r wt;
 	# followed by "/" or a quote so glint-482 does not match glint-482-r37.
 	last="-"; last_ts=0
 	if [ -d "$transcripts" ]; then
-		f=$(rg -l -e "${wt}/" -e "${wt}\"" "$transcripts" 2>/dev/null \
-			| xargs stat "${stat_fmt[@]}" 2>/dev/null | sort -rn | head -1)
-		if [ -n "$f" ]; then last_ts=$(echo "$f" | awk '{print $1}')
+		timestamp=$(rg -l -0 -F -e "${wt}/" -e "${wt}\"" "$transcripts" 2>/dev/null \
+			| while IFS= read -r -d '' file; do stat "${stat_fmt[@]}" "$file" 2>/dev/null; done \
+			| sort -rn | head -1)
+		if [ -n "$timestamp" ]; then last_ts=$timestamp
 			last=$(fmt_day "$last_ts" 2>/dev/null); fi
 	fi
 	recent=$([ "$last_ts" -gt 0 ] 2>/dev/null && [ $(( (now - last_ts) / 86400 )) -le 4 ] && echo yes || echo no)
 
-	case "$dirty" in wip:*) bucket=hold-wip ;; *)
+	case "$dirty" in unknown) bucket=review ;; wip:*) bucket=hold-wip ;; *)
 		case "$pr" in */open|*/draft) bucket=hold-open-pr ;; *)
 			if [ "$recent" = yes ]; then bucket=verify-recent-chat
 			elif [ "$merged" = YES ] || [ "$pr" != "-" ]; then bucket=safe
@@ -126,8 +130,8 @@ git worktree list --porcelain | awk '/^worktree /{print $2}' | while read -r wt;
 		esac ;;
 	esac
 
+	# Keep one TSV row even for paths containing a tab or newline.
+	[[ $wt == *[$'\t\r\n']* ]] && printf -v wt '%q' "$wt"
 	printf "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n" \
 		"$size" "$age" "$merged" "$dirty" "$remote" "$pr" "$last" "$bucket" "$wt"
-done | sort -t$'\t' -k1,1 -rh
-
-rm -f "$prs"
+done < "$audit_tmp/worktrees" | sort -t$'\t' -k1,1 -rh
