@@ -13,6 +13,4 @@ Future upstream syncs must skip the Benny automation pack (`pstack/automations/b
 
 `.agents/skills/poteto-mode/scripts/worktree-audit.sh` carries a patch over the pin. The patch reads worktree paths with `git worktree list --porcelain -z` and passes each full path to git. The pinned script splits those paths on whitespace. Keep the patch until cursor/plugins ships its own fix for that split. On that sync, take upstream's script verbatim and remove the patch and this note.
 
-The script reads Codex transcripts from `PSTACK_TRANSCRIPTS_DIR` instead of `~/.cursor/projects/<slug>/agent-transcripts`.
-
 This repository targets Codex only. It does not register Cursor or Claude Code compatibility layouts. External Slack/tracker integrations, event runners, and repository-specific verification tools remain prerequisites for the workflows that use them.
