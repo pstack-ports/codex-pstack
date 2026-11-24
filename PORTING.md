@@ -108,6 +108,10 @@ Use this sequence for each later source revision.
 
 The Benny automation pack is not part of this port. Future imports must continue to omit its source directory and its associated documentation, skills, and templates.
 
+### Removed bot UI skill
+
+The source `make-bot-ui` skill is not part of this port. Its provider-specific webhook workflow has no documented Codex integration, so future imports must continue to omit the skill and its user-facing documentation unless a supported integration is documented.
+
 ## Verification
 
 Run the checks from the repository root after every port or sync.

@@ -65,7 +65,6 @@ For `worktree-audit.sh`, optionally set `PSTACK_TRANSCRIPTS_DIR` to a temporary 
 | `/loop` | Use a supported goal/long-running facility only when explicitly requested. Otherwise work within the active session; do not promise unattended continuation after it ends. |
 | Cursor Automations, `/automate`, `update_state` routines | Use an available, documented Codex scheduling/automation integration. Scheduling alone does not provide Slack events or webhook triggers. For those, verify an existing external event runner and its actual API. If absent, prepare prompts/configuration and report the missing runner; never call a Cursor backend. |
 | `SendToUser` secret requests | Use an actual secret-entry facility when exposed, or have the user set the named server-side environment variable outside chat. Do not request a secret in chat or claim a nonexistent secret card. |
-| Grok Bot/webhook UI | Follow this port's `make-bot-ui` skill: a local server starts Codex through its supported CLI or a documented app-server integration. |
 | Bugbot / agentic security review | Read existing forge checks/comments as ordinary review evidence. Do not start or wait for a service absent from this repository. Use the independent-review playbook when applicable. |
 | Built-in skill/test/eval helpers | Discover actual installed capabilities. Use pstack's bundled skill or repository scripts when possible. State any missing check instead of claiming it ran. |
 
