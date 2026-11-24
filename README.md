@@ -1,6 +1,6 @@
 # pstack for Codex
 
-Codex port of [pstack](https://github.com/cursor/plugins/tree/2f87c854fe3e2fcda44ca86b46ede35aad3c46b7/pstack) `0.15.43` by Lauren Tan, following [agy-pstack](https://github.com/pstack-ports/agy-pstack). Bundles `deslop`, `control-cli`, and `control-ui`. See [UPSTREAM.md](./UPSTREAM.md) for the source pin and port scope.
+Codex port of [pstack](https://github.com/cursor/plugins/tree/2f87c854fe3e2fcda44ca86b46ede35aad3c46b7/pstack) `0.15.43` by Lauren Tan. Bundles `deslop`, `control-cli`, and `control-ui`. See [PORTING.md](./PORTING.md) for the source pin and port scope.
 
 Skills live only in `.agents/skills/`. The [Codex adapter](./docs/harness/codex.md) maps preserved upstream tool names to the current session and is loaded by every skill. The original author's introduction follows.
 
