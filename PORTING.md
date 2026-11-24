@@ -4,12 +4,12 @@ This guide explains how the source pstack package is adapted for Codex and how t
 
 ## Current baseline
 
-The current port is based on the `pstack` directory in [cursor/plugins](https://github.com/cursor/plugins/tree/2f87c854fe3e2fcda44ca86b46ede35aad3c46b7/pstack).
+The current port is based on the `pstack` directory in [cursor/plugins](https://github.com/cursor/plugins/tree/0b46ec399d55f2829e88822998f53b84944837d3/pstack).
 
 | Field | Value |
 | --- | --- |
-| Source revision | `2f87c854fe3e2fcda44ca86b46ede35aad3c46b7` |
-| Source version | `0.15.43` |
+| Source revision | `0b46ec399d55f2829e88822998f53b84944837d3` |
+| Source version | `0.15.46` |
 | Primary source author | Lauren Tan |
 | Additional bundled skills | `deslop`, `control-cli`, and `control-ui` |
 | Target host | Codex |
