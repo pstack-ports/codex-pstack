@@ -23,7 +23,7 @@ Run:
 
 [`/setup-pstack`](../../.agents/skills/setup-pstack/SKILL.md) detects the models you have access to, asks for a reasoning budget, shows you each role (code delegates, judgment, the review panels), and asks what you want. Answer the questions. It writes `.agents/pstack-models.md` in the active project, or `~/.agents/pstack-models.md` when you ask for personal settings, a small rule every pstack skill reads.
 
-The defaults are the same as the `large` budget. Code, prose, and judgment run on Opus 5.5 at `xhigh` reasoning, and the review panels and swarm workers run at `high`. No role runs above `xhigh`. Outside a review panel, Fable 5.2 runs only when you name it for a task or after two Opus 5.5 runs of the same brief fail their check. `medium` lowers each role one level and `small` lowers it two, and both spend fewer tokens.
+Every unconfigured role inherits the parent model and reasoning. `large` keeps explicit reasoning levels, while `medium` lowers each explicit role one level and `small` lowers them two. No role runs above `xhigh`, and `medium` and `small` spend fewer tokens.
 
 You only override what you care about. A role with no line in the rule keeps the skill's default. To restore a default, delete that role's line. A rerun of `/setup-pstack` keeps any role whose model differs from the default. When a default changes, a rule written before the change still pins the old default until you run `/setup-pstack` again. That run replaces the old defaults it recognizes, tells you which, and keeps your other choices. To drop a pin it does not recognize, delete that role's line or the file first.
 

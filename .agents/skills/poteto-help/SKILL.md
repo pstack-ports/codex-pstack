@@ -43,7 +43,7 @@ When the model rule is missing and it matters, ask whether the user wants to pic
    codex plugin add pstack@codex-pstack
    ```
 
-2. Start a new Codex session in your project and run [`$pstack:setup-pstack`](../setup-pstack/SKILL.md). It asks for a reasoning budget, maps a model to each role, and writes a rule. The rule applies to new chats. Then it offers once each to generate a verification skill and a formal verification skill for the project, unless the project already has one.
+2. Run [`$pstack:setup-pstack`](../setup-pstack/SKILL.md) in your project. It asks for a reasoning budget, maps a model to each role, and writes a rule. The next pstack task reads the file, so a restart is unnecessary. Then it offers once each to generate a verification skill and a formal verification skill for the project, unless the project already has one.
 3. Start a real task with `$pstack:poteto-mode`, a goal, and a check that can pass or fail.
 
 Installing changes nothing until the user invokes a skill. Only `$pstack:setup-pstack` loads from the user's words. The [README](../../../README.md) and [guide page 1](../../../docs/guide/01-setup.md) have the details. Offer to word their first prompt with them, per [`references/prompting.md`](references/prompting.md).
@@ -139,7 +139,7 @@ Principles are one-rule skills that `/poteto-mode` reads and cites in its replie
 |---|---|
 | The workflow is not applying to a new task | Invoke `$pstack:poteto-mode` for that task. |
 | A question got treated as the next step of the last task | Say "new task", or say the turn doesn't need the mode. |
-| A new model choice had no effect | The rule from `/setup-pstack` applies to new chats. Start one. |
+| A new model choice had no effect | Run the next pstack task so it rereads the rule. A restart is unnecessary. |
 | Runs cost more than expected | See the cost paragraph under Get set up. |
 | A skill didn't load on its own | Only `/setup-pstack` loads from the user's words. The others load when the user types them or when `/poteto-mode` runs them, and it doesn't run every skill. |
 | Parallel agents overwrote each other | Give each agent its own local session and worktree. |
